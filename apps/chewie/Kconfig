@@ -1,0 +1,55 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config CHEWIE
+	tristate "\"Chewie\""
+	default n
+	---help---
+		Enable the \"Chewie\"
+
+if CHEWIE
+config CHEWIE_PROGNAME
+	string "Program name"
+	default "chewie"
+	depends on BUILD_LOADABLE
+	---help---
+		This is the name of the program that will be use when the NSH ELF
+		program is installed.
+
+config CHEWIE_PRIORITY
+	int "Chewie task priority"
+	default 100
+
+config CHEWIE_STACKSIZE
+	int "Chewie stack size"
+	default 2048
+
+config CHEWIE_NUM_OF_CHANNELS
+	int "Num of channels"
+	---help---
+		4 is the only avilible value now.
+	default 4
+
+config CHEWIE_PWM_DEVICE_PATH_PREFIX
+	string "PWM device path prefix"
+	default "/dev/pwm"
+
+config CHEWIE_PWM_FREQUENCY
+	int "PWM frequency (Hz)"
+	default 400
+
+config CHEWIE_PWM_DUTY_MIN
+	int "min value of PWM duty"
+	default 1
+
+config CHEWIE_PWM_DUTY_MAX
+	int "max value of PWM duty"
+	default 65535
+
+config CHEWIE_PWM_DUTY_INIT_VALUE
+	int "this value will setted to pwm duty when init"
+	default 1
+
+endif

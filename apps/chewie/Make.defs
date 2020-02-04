@@ -1,0 +1,8 @@
+############################################################################
+# apps/chewie/Make.defs
+# Adds selected applications to apps/ build
+############################################################################
+
+ifneq ($(CONFIG_CHEWIE),)
+CONFIGURED_APPS += chewie
+endif
