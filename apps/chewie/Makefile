@@ -11,8 +11,12 @@ PRIORITY  = $(CONFIG_CHEWIE_PRIORITY)
 STACKSIZE = $(CONFIG_CHEWIE_STACKSIZE)
 
 ASRCS = 
-CSRCS = $(CURDIR)/drivers/pwm_out/drv_pwm_out.c
+CSRCS = 
 MAINSRC = chewie_main.c
+
+# drivers
+
+CSRCS += drivers/pwm_out/drv_pwm_out.c
 
 CONFIG_CHEWIE_PROGNAME ?= chewie$(EXEEXT)
 PROGNAME = $(CONFIG_CHEWIE_PROGNAME)
