@@ -4,7 +4,7 @@
 
 #include <nuttx/config.h>
 #include <stdio.h>
-#include "drivers/pwm_out/drv_pwm_out.h"
+#include "drivers/drv_motor.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -37,19 +37,9 @@ int main(int argc, FAR char *argv[])
 int chewie_main(int argc, char *argv[])
 #endif
 {
-  int i;
+  int ret = 0;
   printf("Chewie is running\n");
-  init_pwm_device();
-  for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-    printf("1set duty dev%d\n", i);
-    set_pwm_duty(i + 1, CONFIG_CHEWIE_PWM_DUTY_MAX);
-    sleep(10);
-  }
-  for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-    printf("2set duty dev%d\n", i);
-    set_pwm_duty(i + 1, CONFIG_CHEWIE_PWM_DUTY_MAX);
-    sleep(10);
-  }
-  uninit_pwm_device();
+  ret = drv_motor_init();
+  sleep(10);
   return 0;
 }

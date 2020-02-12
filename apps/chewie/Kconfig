@@ -32,24 +32,24 @@ config CHEWIE_NUM_OF_CHANNELS
 		4 is the only avilible value now.
 	default 4
 
-config CHEWIE_PWM_DEVICE_PATH_PREFIX
+config CHEWIE_MOTOR_PWM_OUT_DEVICE_PATH_PREFIX
 	string "PWM device path prefix"
-	default "/dev/pwm"
+	default "/dev/pwm_out_motor_"
 
 config CHEWIE_PWM_FREQUENCY
 	int "PWM frequency (Hz)"
 	default 400
 
-config CHEWIE_PWM_DUTY_MIN
-	int "min value of PWM duty"
-	default 1
+config CHEWIE_PWM_MIN_THROTTLE_PULSE_US
+	int "min value of PWM in us"
+	default 1000
 
-config CHEWIE_PWM_DUTY_MAX
-	int "max value of PWM duty"
-	default 65535
+config CHEWIE_PWM_MAX_THROTTLE_PLUSE_US
+	int "max value of PWM in us"
+	default 2000
 
-config CHEWIE_PWM_DUTY_INIT_VALUE
-	int "this value will setted to pwm duty when init"
-	default 1
+config CHEWIE_PWM_ARMED_THROTTLE_PLUSE_US
+	int "this value will setted to PWM in us when init(or armed)"
+	default 900
 
 endif

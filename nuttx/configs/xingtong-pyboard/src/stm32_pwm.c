@@ -48,8 +48,8 @@ int stm32_pwm_setup(void) {
 		aerr("ERROR: Failed to get stm32 PWM lower half\n");
 		return ENODEV;
 	}
-
-	ret = pwm_register("/dev/pwm_out0", pwm);
+	// motor pwm
+	ret = pwm_register("/dev/pwm_out_motor_0", pwm);
 	if (ret < 0) {
 		aerr("ERROR: PWM register failed : %d\n", ret);
 		return ret;

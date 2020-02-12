@@ -15,6 +15,7 @@ CSRCS =
 MAINSRC = chewie_main.c
 
 # drivers
+CSRCS += drivers/motor/drv_motor.c
 
 CSRCS += drivers/pwm_out/drv_pwm_out.c
 
