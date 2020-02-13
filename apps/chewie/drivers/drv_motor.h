@@ -11,6 +11,7 @@ struct motor_state_s {
     ub16_t dutys[CONFIG_CHEWIE_NUM_OF_CHANNELS];
 };
 
+// motor的全局配置(用于读取或者设置当前的每个通道的duty值)
 struct motor_state_s g_motor_state;
 
 int drv_motor_init(void);
