@@ -26,30 +26,94 @@ config CHEWIE_STACKSIZE
 	int "Chewie stack size"
 	default 2048
 
+# 单元测试配置
+config CHEWIE_ENABLE_UNIT_TEST
+	bool "Chewie enable unit test"
+	default false
+
+# 飞控相关基本配置
+menu "Chewie general config"
 config CHEWIE_NUM_OF_CHANNELS
 	int "Num of channels"
 	---help---
 		4 is the only avilible value now.
 	default 4
+endmenu
 
+# 日志相关配置
+menu "Chewie Log config"
+config CHEWIE_ENABLE_LOG
+	tristate "enable log feature"
+	default n
+
+if CHEWIE_ENABLE_LOG
+
+## PWM日志相关配置
+config CHEWIE_ENABLE_PWM_LOG
+	tristate "enable pwm log feature"
+	default n
+
+if CHEWIE_ENABLE_PWM_LOG
+config CHEWIE_ENABLE_PWM_LOG_DEBUG
+	tristate "enable pwm debug level log"
+	default n
+config CHEWIE_ENABLE_PWM_LOG_INFO
+	tristate "enable pwm info level log"
+	default n
+config CHEWIE_ENABLE_PWM_LOG_WARNING
+	tristate "enable pwm warning level log"
+	default n
+config CHEWIE_ENABLE_PWM_LOG_ERROR
+	tristate "enable pwm error level log"
+	default n
+
+endif
+
+## MOTOR日志相关配置
+config CHEWIE_ENABLE_MOTOR_LOG
+	tristate "enable motor log feature"
+	default n
+
+if CHEWIE_ENABLE_MOTOR_LOG
+config CHEWIE_ENABLE_MOTOR_LOG_DEBUG
+	tristate "enable motor debug level log"
+	default n
+config CHEWIE_ENABLE_MOTOR_LOG_INFO
+	tristate "enable motor info level log"
+	default n
+config CHEWIE_ENABLE_MOTOR_LOG_WARNING
+	tristate "enable motor warning level log"
+	default n
+config CHEWIE_ENABLE_MOTOR_LOG_ERROR
+	tristate "enable motor error level log"
+	default n
+
+endif
+
+endif
+endmenu
+
+# MOTOR相关配置
+menu "chewie motor config"
 config CHEWIE_MOTOR_PWM_OUT_DEVICE_PATH_PREFIX
-	string "PWM device path prefix"
+	string "motor: PWM device path prefix"
 	default "/dev/pwm_out_motor_"
 
-config CHEWIE_PWM_FREQUENCY
-	int "PWM frequency (Hz)"
+config CHEWIE_MOTOR_PWM_FREQUENCY
+	int "motor: PWM frequency (Hz)"
 	default 400
 
-config CHEWIE_PWM_MIN_THROTTLE_PULSE_US
-	int "min value of PWM in us"
+config CHEWIE_MOTOR_PWM_MIN_THROTTLE_PLUSE_US
+	int "motor: min value of PWM in us"
 	default 1000
 
-config CHEWIE_PWM_MAX_THROTTLE_PLUSE_US
-	int "max value of PWM in us"
+config CHEWIE_MOTOR_PWM_MAX_THROTTLE_PLUSE_US
+	int "motor: max value of PWM in us"
 	default 2000
 
-config CHEWIE_PWM_ARMED_THROTTLE_PLUSE_US
-	int "this value will setted to PWM in us when init(or armed)"
+config CHEWIE_MOTOR_PWM_ARMED_THROTTLE_PLUSE_US
+	int "motor: this value will setted to PWM in us when init(or armed)"
 	default 900
+endmenu
 
 endif
