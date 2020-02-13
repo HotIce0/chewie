@@ -1,18 +1,45 @@
 /****************************************************************************
  * Included Files
  ****************************************************************************/
+#include <sys/types.h>
+#include <sys/ioctl.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <debug.h>
+#include <string.h>
+
+#include "../../lib/lib_log.h"
+
 #include "drv_pwm_out.h"
 
+/**
+ * drv_pwm_init
+ * @describe: 初始化pwm设备，即打开设备获取设备fd号，用于后续操作。
+ * @author: hotice0
+ * @param: devpath(pwm设备路经)
+ * @return: 如果执行成功返回设备fd号，否则返回-1
+ */
 int drv_pwm_init(const char *devpath)
 {
     int fd = 0;
+    #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_DEBUG
+    CHEWIE_LOG("DEBUG:: drv_pwm_init(devpath: %s)\n", devpath);
+    #endif
     if (!devpath) {
-        printf("drv_pwm_init(devpath: NULL) failed\n");
+        #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_ERROR
+        CHEWIE_LOG("ERROR:: drv_pwm_init(devpath: NULL) failed\n");
+        #endif
         goto errout;
     }
     fd = open(devpath, O_RDONLY);
     if (fd < 0) {
-        printf("drv_pwm_init: open(devpath: %s, ...) pwm dev failed with errno : %d\n", devpath, errno);
+        #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_ERROR
+        CHEWIE_LOG("ERROR:: drv_pwm_init: open(devpath: %s, flag: O_RDONLY) pwm dev failed with errno : %d\n", devpath, errno);
+        #endif
         goto errout;
     }
     return fd;
@@ -21,13 +48,25 @@ errout:
     return -1;
 }
 
+/**
+ * drv_pwm_start
+ * @describe: 启动对应pwm设备的pwm信号输出
+ * @author: hotice0
+ * @param: fd(pwm设备初始化后得到的fd号)
+ * @return: 如果执行成功返回0，否则返回-1
+ */
 int drv_pwm_start(int fd)
 {
     int ret = 0;
+    #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_DEBUG
+    CHEWIE_LOG("DEBUG:: drv_pwm_start(fd: %d)\n", fd);
+    #endif
     // start the pwm device
     ret = ioctl(fd, PWMIOC_START, 0);
     if (ret < 0) {
-        printf("drv_pwm_start: ioctl(PWMIOC_START) failed: %d\n", errno);
+        #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_ERROR
+        CHEWIE_LOG("ERROR:: drv_pwm_start: ioctl(PWMIOC_START) failed: %d\n", errno);
+        #endif
         goto errout;
     }
     return 0;
@@ -36,27 +75,26 @@ errout:
     return -1;
 }
 
+/**
+ * drv_pwm_stop
+ * @describe: 停止对应pwm设备的pwm信号输出
+ * @author: hotice0
+ * @param: fd(pwm设备初始化后得到的fd号)
+ * @return: 如果执行成功返回0，否则返回-1
+ */
 int drv_pwm_stop(int fd)
 {
     int ret = 0;
+    #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_DEBUG
+    CHEWIE_LOG("DEBUG:: drv_pwm_stop(fd: %d)\n", fd);
+    #endif
+    
     ret = ioctl(fd, PWMIOC_STOP, 0);
     if (ret < 0)
     {
-        printf("drv_pwm_stop: ioctl(PWMIOC_STOP) failed: %d\n", errno);
-        goto errout;
-    }
-errout:
-    fflush(stdout);
-    return -1;
-}
-
-int drv_pwm_update_info(int fd, const struct pwm_info_s *p_init_info_s)
-{
-    int ret = 0;
-    // send control info to pwm device
-    ret = ioctl(fd, PWMIOC_SETCHARACTERISTICS, (unsigned long)((uintptr_t)p_init_info_s));
-    if (ret < 0) {
-        printf("drv_pwm_init: ioctl(fd: %d) failed with code %d\n", fd, errno);
+        #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_ERROR
+        CHEWIE_LOG("ERROR:: drv_pwm_stop: ioctl(PWMIOC_STOP) failed: %d\n", errno);
+        #endif
         goto errout;
     }
     return 0;
@@ -65,112 +103,45 @@ errout:
     return -1;
 }
 
-void drv_pwm_uninit(int fd)
+/**
+ * drv_pwm_update_info
+ * @describe: 更新对应pwm设备的pwm相关配置
+ * @author: hotice0
+ * @param: fd(pwm设备初始化后得到的fd号)
+ *         p_init_info_s(pwm设备配置信息结构体)
+ * @return: 如果执行成功返回0，否则返回-1
+ */
+int drv_pwm_update_info(int fd, const struct pwm_info_s *p_init_info_s)
 {
-    close(fd);
+    int ret = 0;
+    #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_DEBUG
+    CHEWIE_LOG("DEBUG:: drv_pwm_update_info(fd: %d, p_init_info_s: ...)\n", fd);
+    #endif
+    // send control info to pwm device
+    ret = ioctl(fd, PWMIOC_SETCHARACTERISTICS, (unsigned long)((uintptr_t)p_init_info_s));
+    if (ret < 0) {
+        #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_ERROR
+        CHEWIE_LOG("ERROR:: drv_pwm_init: ioctl(fd: %d) failed with code %d\n", fd, errno);
+        #endif
+        goto errout;
+    }
+    return 0;
+errout:
+    fflush(stdout);
+    return -1;
 }
 
-
-
-// int init_pwm_device()
-// {
-//     int i = 0;
-//     int j = 0;
-//     int ret = 0;
-//     char devpath[50] = {0};
-
-//     if (!g_pwmstate.initialized) {
-//         // init g_pwmstate
-//         g_pwmstate.freq = CONFIG_CHEWIE_PWM_FREQUENCY;
-//         for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-//             g_pwmstate.pwms_info[i].frequency = CONFIG_CHEWIE_PWM_FREQUENCY;
-//             g_pwmstate.pwm_devs_fd[i] = -1;
-//             for (j = 0; j < 4 && i * 4 + j < CONFIG_CHEWIE_NUM_OF_CHANNELS; ++j) {
-//                 g_pwmstate.pwms_info[i].channels[j].channel = j + 1;
-//                 g_pwmstate.pwms_info[i].channels[j].duty = CONFIG_CHEWIE_PWM_DUTY_INIT_VALUE;
-//             }
-//         }
-
-//         // init all pwm device
-//         for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-//             sprintf(devpath, "%s%d", CONFIG_CHEWIE_PWM_OUT_DEVICE_PATH_PREFIX, i);
-//             printf("dev %s init\n", devpath);
-
-//             // open the pwm device
-//             g_pwmstate.pwm_devs_fd[i] = open(devpath, O_RDONLY);
-//             if (g_pwmstate.pwm_devs_fd[i] < 0) {
-//                 printf("init_pwm_device: open %s failed: %d\n", devpath, errno);
-//                 goto errout;
-//             }
-
-//             // send control info to pwm device
-//             ret = ioctl(g_pwmstate.pwm_devs_fd[i], PWMIOC_SETCHARACTERISTICS, (unsigned long)((uintptr_t)&g_pwmstate.pwms_info[i]));
-//             if (ret < 0) {
-//                 printf("init_pwm_device: ioctl(PWMIOC_SETCHARACTERISTICS) failed: %d\n", errno);
-//                 goto errout_with_dev;
-//             }
-
-//             // start the pwm device
-//             ret = ioctl(g_pwmstate.pwm_devs_fd[i], PWMIOC_START, 0);
-//             if (ret < 0) {
-//                 printf("init_pwm_device: ioctl(PWMIOC_START) failed: %d\n", errno);
-//                 goto errout_with_dev;
-//             }
-
-//             printf("success init and start pwm device : %s\n", devpath);
-//         }
-//         g_pwmstate.initialized = true;
-//     }
-//     else
-//     {
-//         printf("pwm device is already inited\n");
-//     }
-//     return OK;
-// errout_with_dev:
-//     for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i)
-//     {
-//         if (g_pwmstate.pwm_devs_fd[i] >= 0)
-//             close(g_pwmstate.pwm_devs_fd[i]);
-//     }
-// errout:
-//     fflush(stdout);
-//     return ERROR;
-// }
-
-// int set_pwm_duty(uint8_t channel, ub16_t duty)
-// {
-//     int ret = 0;
-//     int i = 0;
-//     uint8_t index_dev = channel % 3 == 0 ? channel / 3 - 1 : channel / 3;
-
-//     g_pwmstate.pwms_info[index_dev].channels[channel].duty = duty;
-//     #ifdef PWM_DEBUG
-//     printf("set_pwm_duty(channel: %d, duty: %d) index_dev: %d", (int)channel, (int)duty, (int)index_dev);
-//     #endif
-//     // send control info to pwm device
-//     ret = ioctl(g_pwmstate.pwm_devs_fd[index_dev], PWMIOC_SETCHARACTERISTICS, (unsigned long)((uintptr_t)&g_pwmstate.pwms_info[index_dev]));
-//     if (ret < 0) {
-//         printf("init_pwm_device: ioctl(PWMIOC_SETCHARACTERISTICS) failed: %d\n", errno);
-//         goto errout_with_dev;
-//     }
-//     return OK;
-
-// errout_with_dev:
-//     for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-//         if (g_pwmstate.pwm_devs_fd[i] >= 0)
-//             close(g_pwmstate.pwm_devs_fd[i]);
-//     }
-//     fflush(stdout);
-//     return ERROR;
-// }
-
-// int uninit_pwm_device()
-// {
-//     int i = 0;
-//     g_pwmstate.initialized = false;
-//     for (i = 0; i < CHEWIE_NUM_OF_PWM_DEV; ++i) {
-//         if (g_pwmstate.pwm_devs_fd[i] >= 0)
-//             close(g_pwmstate.pwm_devs_fd[i]);
-//     }
-//     return OK;
-// }
+/**
+ * drv_pwm_deinit
+ * @describe: 关闭pwm设备(并不会关闭pwm输出)
+ * @author: hotice0
+ * @param: fd(pwm设备初始化后得到的fd号)
+ * @return: 如果执行成功返回0，否则返回-1
+ */
+void drv_pwm_deinit(int fd)
+{
+    #ifdef CONFIG_CHEWIE_ENABLE_PWM_LOG_DEBUG
+    CHEWIE_LOG("DEBUG:: drv_pwm_deinit(fd: %d)\n", fd);
+    #endif
+    close(fd);
+}
