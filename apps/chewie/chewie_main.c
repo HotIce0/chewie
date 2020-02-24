@@ -30,68 +30,6 @@
 int test_motor(void)
 {
   int ret = 0;
-  int i  = 0;
-  printf(">> test motor start\n");
-  ret = drv_motor_init();
-  if (ret < 0) {
-    printf(">> test motor: drv_motor_init with error ret: %d\n", ret);
-    goto errout;
-  }
-  sleep(3);
-
-  printf("motor set to min throttle duty: %u\n", CHEWIE_DRV_MOTOR_MIN_THROTTLE_DUTY);
-  for (i = 0; i < CONFIG_CHEWIE_NUM_OF_CHANNELS; ++i) {
-    g_motor_state.dutys[i] = CHEWIE_DRV_MOTOR_MIN_THROTTLE_DUTY;
-  }
-  ret = drv_motor_update();
-  if (ret < 0) {
-    printf(">> test motor: drv_motor_update with error ret: %d\n", ret);
-    goto errout;
-  }
-  sleep(3);
-
-  printf("motor set to max throttle duty: %u\n", CHEWIE_DRV_MOTOR_MAX_THROTTLE_DUTY);
-  for (i = 0; i < CONFIG_CHEWIE_NUM_OF_CHANNELS; ++i) {
-    g_motor_state.dutys[i] = CHEWIE_DRV_MOTOR_MAX_THROTTLE_DUTY;
-  }
-  ret = drv_motor_update();
-  if (ret < 0) {
-    printf(">> test motor: drv_motor_update with error ret: %d\n", ret);
-    goto errout;
-  }
-  sleep(3);
-
-  drv_motor_deinit();
-  printf(">> test motor done\n");
-  return 0;
-errout:
-  printf(">> test motor [failed]\n");
-  drv_motor_deinit();
-  return -1;
-}
-
-#if defined(CONFIG_CHEWIE_ENABLE_UNIT_TEST)
-#if defined(BUILD_MODULE)
-int main(int argc, char *argv[])
-#else
-int chewie_main(int argc, char *argv[])
-#endif
-{
-  test_motor();
-  return 0;
-}
-#else
-/****************************************************************************
- * chewie_main
- ****************************************************************************/
-
-#if defined(BUILD_MODULE)
-int main(int argc, FAR char *argv[])
-#else
-int chewie_main(int argc, char *argv[])
-#endif
-{
-  int ret = 0;
   int i = 0;
   printf("INFO:: chewie started\n");
   printf("INFO:: motor init started\n");
@@ -144,9 +82,52 @@ int chewie_main(int argc, char *argv[])
   sleep(5);
 
   drv_motor_deinit();
+  printf(">> test motor done\n");
   return 0;
 errout:
+  printf(">> test motor [failed]\n");
+  drv_motor_deinit();
   return -1;
+}
+
+#if defined(CONFIG_CHEWIE_ENABLE_UNIT_TEST)
+#if defined(BUILD_MODULE)
+int main(int argc, char *argv[])
+#else
+int chewie_main(int argc, char *argv[])
+#endif
+{
+  test_motor();
+  return 0;
+}
+#else
+/****************************************************************************
+ * chewie_main
+ ****************************************************************************/
+
+#include "drivers/drv_imu.h"
+#include "lib/lib_rtc.h"
+
+#if defined(BUILD_MODULE)
+int main(int argc, FAR char *argv[])
+#else
+int chewie_main(int argc, char *argv[])
+#endif
+{
+  char input;
+  clock_t time_last = g_system_timer;
+  drv_imu_init();
+  while(1) {
+    drv_imu_interface.update();
+    printf("###delta: %d\n", g_system_timer - time_last);
+    time_last = g_system_timer;
+    //printf("system_timer: %d\n", g_system_timer);
+    //input = getchar();
+    //if (input == '1')
+    // break;
+  }
+  drv_imu_deinit();
+  return 0;
 }
 
 #endif

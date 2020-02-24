@@ -16,8 +16,14 @@ MAINSRC = chewie_main.c
 
 # drivers
 CSRCS += drivers/motor/drv_motor.c
-
 CSRCS += drivers/pwm_out/drv_pwm_out.c
+
+ifeq ($(CONFIG_CHEWIE_IMU_JY901B),y)
+CSRCS += drivers/imu/JY901B/drv_imu_jy901b.c
+endif
+
+# lib
+CSRCS += lib/i2c/lib_i2c.c
 
 CONFIG_CHEWIE_PROGNAME ?= chewie$(EXEEXT)
 PROGNAME = $(CONFIG_CHEWIE_PROGNAME)

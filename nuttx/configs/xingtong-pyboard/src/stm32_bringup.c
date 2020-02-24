@@ -85,7 +85,7 @@ static void stm32_i2c_register(int bus)
 #if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)
 static void stm32_i2ctool(void)
 {
-  stm32_i2c_register(1);
+  stm32_i2c_register(2);
 #if 0
   stm32_i2c_register(1);
   stm32_i2c_register(2);

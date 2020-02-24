@@ -66,7 +66,46 @@ config CHEWIE_ENABLE_PWM_LOG_WARNING
 config CHEWIE_ENABLE_PWM_LOG_ERROR
 	tristate "enable pwm error level log"
 	default n
+endif
 
+## I2C日志相关配置
+config CHEWIE_ENABLE_I2C_LOG
+	tristate "enable I2C log feature"
+	default n
+
+if CHEWIE_ENABLE_I2C_LOG
+config CHEWIE_ENABLE_I2C_LOG_DEBUG
+	tristate "enable I2C debug level log"
+	default n
+config CHEWIE_ENABLE_I2C_LOG_INFO
+	tristate "enable I2C info level log"
+	default n
+config CHEWIE_ENABLE_I2C_LOG_WARNING
+	tristate "enable I2C warning level log"
+	default n
+config CHEWIE_ENABLE_I2C_LOG_ERROR
+	tristate "enable I2C error level log"
+	default n
+endif
+
+## IMU日志相关配置
+config CHEWIE_ENABLE_IMU_LOG
+	tristate "enable IMU log feature"
+	default n
+
+if CHEWIE_ENABLE_IMU_LOG
+config CHEWIE_ENABLE_IMU_LOG_DEBUG
+	tristate "enable IMU debug level log"
+	default n
+config CHEWIE_ENABLE_IMU_LOG_INFO
+	tristate "enable IMU info level log"
+	default n
+config CHEWIE_ENABLE_IMU_LOG_WARNING
+	tristate "enable IMU warning level log"
+	default n
+config CHEWIE_ENABLE_IMU_LOG_ERROR
+	tristate "enable IMU error level log"
+	default n
 endif
 
 ## MOTOR日志相关配置
@@ -114,6 +153,38 @@ config CHEWIE_MOTOR_PWM_MAX_THROTTLE_PLUSE_US
 config CHEWIE_MOTOR_PWM_ARMED_THROTTLE_PLUSE_US
 	int "motor: this value will setted to PWM in us when init(or armed)"
 	default 900
+endmenu
+
+# SENSOR相关配置
+menu "chewie sensor config"
+
+menu "imu config"
+
+config CHEWIE_IMU_JY901B
+	tristate "enable imu_jy901b"
+	default y
+if CHEWIE_IMU_JY901B
+config CHEWIE_IMU_JY901B_I2C
+	tristate "use i2c procotol"
+	default y
+if CHEWIE_IMU_JY901B_I2C
+config CHEWIE_IMU_JY901B_I2C_DEV_PATH
+	string "set i2c dev path"
+	default "/dev/i2c2"
+config CHEWIE_IMU_JY901B_I2C_BUS
+	int "set i2c bus"
+	default 2
+config CHEWIE_IMU_JY901B_I2C_FREQUENCY
+	int "set i2c frequency (Hz)"
+	default 400000
+config CHEWIE_IMU_JY901B_I2C_SLAVE_ADDRESS
+	int "set i2c slave address"
+	default 80
+endif
+endif
+
+endmenu
+
 endmenu
 
 endif
