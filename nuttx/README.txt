@@ -1,17 +1,17 @@
 README
 ^^^^^^
 
-  o Environments
+  o Environments :
     - Installing Cygwin
     - Ubuntu Bash under Windows 10
-  o Installation
+  o Installation:
     - Download and Unpack
     - Semi-Optional apps/ Package
     - Installation Directories with Spaces in the Path
     - Downloading from Repositories
     - Related Repositories
     - Notes about Header Files
-  o Configuring NuttX
+  o Configuring NuttX:
     - Instantiating "Canned" Configurations
     - Refreshing Configurations
     - NuttX Configuration Tool
@@ -22,20 +22,20 @@ README
     - Making defconfig Files
     - Incompatibilities with Older Configurations
     - NuttX Configuration Tool under DOS
-  o Toolchains
+  o Toolchains:
     - Cross-Development Toolchains
     - NuttX Buildroot Toolchain
-  o Shells
-  o Building NuttX
+  o Shells:
+  o Building NuttX:
     - Building
     - Re-building
     - Build Targets and Options
     - Native Windows Build
     - Installing GNUWin32
-  o Cygwin Build Problems
+  o Cygwin Build Problems:
     - Strange Path Problems
     - Window Native Toolchain Issues
-  o Documentation
+  o Documentation:
 
 ENVIRONMENTS
 ^^^^^^^^^^^^
@@ -43,7 +43,7 @@ ENVIRONMENTS
   NuttX requires a POSIX development environment such as you would find under
   Linux or macOS.  NuttX may also be installed and built on Windows system
   if you also provide such a POSIX development environment.  Options for a
-  POSIX development environment under Windows include:
+  POSIX development environment under Windows include:-
 
     - An installation of Linux on a virtual machine (VM) in Windows.  I have
       not been happy using a VM myself.  I have had stability problems with
@@ -2214,6 +2214,8 @@ NxWidgets/
 
 buildroot/
  `- README.txt
+ 
+
 
 tools/
  `- README.txt
@@ -2223,3 +2225,10 @@ uClibc++/
 
 pascal/
  `- README.txt
+ 
+  
+ 
+ 
+ 
+ HOPE YOU LIKED IT !!!
+ LOVE YOU ALL.....   :-) 
